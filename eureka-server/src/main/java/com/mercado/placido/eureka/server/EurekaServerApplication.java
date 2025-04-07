@@ -1,4 +1,4 @@
-package com.mercado.placido.eureka_server;
+package com.mercado.placido.eureka.server;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
