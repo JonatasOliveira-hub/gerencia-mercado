@@ -9,7 +9,6 @@ import org.springframework.web.client.RestTemplate;
 
 @SpringBootApplication
 @EnableFeignClients
-//@EnableCircuitBreaker
 public class ProdutoServiceApplication {
 
 	public static void main(String[] args) {
@@ -18,7 +17,7 @@ public class ProdutoServiceApplication {
 
 	@Bean
 	@LoadBalanced
-	public RestTemplate restTemplate() {
-		return new RestTemplate();
-	}
+    public RestTemplate restTemplate() {
+        return new RestTemplate();
+    }
 }
