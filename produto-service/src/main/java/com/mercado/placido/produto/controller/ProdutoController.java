@@ -17,13 +17,14 @@ public class ProdutoController {
 
 	@Autowired
 	TicketService ticketService;
-
+	
 	@GetMapping(value = "/produto")
 	public Iterable<Produto> all() {
 		return produtoRepository.findAll();
 	}
 
 	@GetMapping(value = "/produto/{produtoId}")
+	//@HystrixCommand(fallbackMethod = "fallbackForOperation")
 	public Produto findByAccountId(@PathVariable Integer produtoId) {
 
 		Produto produto = produtoRepository.findByProdutoId(produtoId);
@@ -32,4 +33,5 @@ public class ProdutoController {
 
 		return produto;
 	}
+
 }
