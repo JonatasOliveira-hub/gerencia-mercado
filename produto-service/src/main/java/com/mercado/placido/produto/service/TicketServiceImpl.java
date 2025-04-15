@@ -1,7 +1,5 @@
 package com.mercado.placido.produto.service;
 
-import java.util.logging.Logger;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -22,7 +20,7 @@ public class TicketServiceImpl implements TicketService {
 	@CircuitBreaker(name = CB_NAME, fallbackMethod = "fallbackTicket")
 	public Mono<Ticket> findByProdutoId(Integer produtoId) {
 		return webClientBuilder.build().get()
-				.uri("http://localhost:6060/ticket/produto/{produtoId}", produtoId)
+				.uri("http://localhost:ticket-server:6060/ticket/produto/{produtoId}", produtoId)
 				.retrieve()
 				.bodyToMono(Ticket.class);
 	}
