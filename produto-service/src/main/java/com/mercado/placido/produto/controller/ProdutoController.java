@@ -24,7 +24,6 @@ public class ProdutoController {
 	}
 
 	@GetMapping(value = "/produto/{produtoId}")
-	//@HystrixCommand(fallbackMethod = "fallbackForOperation")
 	public Produto findByAccountId(@PathVariable Integer produtoId) {
 
 		Produto produto = produtoRepository.findByProdutoId(produtoId);

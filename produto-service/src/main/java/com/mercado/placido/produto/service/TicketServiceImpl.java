@@ -6,7 +6,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import com.mercado.placido.produto.domain.Ticket;
-import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
+
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 
 @Service
 public class TicketServiceImpl implements TicketService {
@@ -17,7 +18,8 @@ public class TicketServiceImpl implements TicketService {
 	@LoadBalanced
 	RestTemplate restTemplate;
 
-	@HystrixCommand(fallbackMethod = "defaulTicket")
+	//@HystrixCommand(fallbackMethod = "defaulTicket")
+	@CircuitBreaker(name = "ticketCB",fallbackMethod = "defaulTicket")
 	public Ticket findByProdutoId(Integer produtoId) {
 		return restTemplate.getForObject(url, Ticket.class, produtoId);
 	}
