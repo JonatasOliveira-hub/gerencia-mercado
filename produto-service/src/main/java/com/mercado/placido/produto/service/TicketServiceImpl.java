@@ -1,31 +1,34 @@
 package com.mercado.placido.produto.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import com.mercado.placido.produto.domain.Ticket;
 
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import reactor.core.publisher.Mono;
 
 @Service
 public class TicketServiceImpl implements TicketService {
+	
+	
+	 private static final String CB_NAME = "ticketService";
 
-	private String url = "http://ticket-server/ticket/produto/{produtoId}";
+	    @Autowired
+	    private WebClient.Builder webClientBuilder;
 
-	@Autowired
-	@LoadBalanced
-	RestTemplate restTemplate;
+	    @CircuitBreaker(name = CB_NAME, fallbackMethod = "defaultTicket")
+	    public Mono<Ticket> findByProdutoId(Integer produtoId) {
+	        return webClientBuilder.build()
+	                .get()
+	                .uri("http://ticket-server:6060/ticket/produto/{produtoId}", produtoId)
+	                .retrieve()
+	                .bodyToMono(Ticket.class);
+	    }
 
-	//@HystrixCommand(fallbackMethod = "defaulTicket")
-	@CircuitBreaker(name = "ticketCB",fallbackMethod = "defaulTicket")
-	public Ticket findByProdutoId(Integer produtoId) {
-		return restTemplate.getForObject(url, Ticket.class, produtoId);
-	}
-
-	private Ticket defaulTicket(Integer produtoId) {
-        return new Ticket();
-    }
-
+	    // Fallback method must match return type and parameters
+	    public Mono<Ticket> defaultTicket(Integer produtoId, Throwable throwable) {
+	        return Mono.just(new Ticket());
+	    }
 }

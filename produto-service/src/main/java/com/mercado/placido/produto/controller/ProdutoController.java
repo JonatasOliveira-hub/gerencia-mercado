@@ -6,8 +6,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mercado.placido.produto.domain.Produto;
+import com.mercado.placido.produto.domain.Ticket;
 import com.mercado.placido.produto.repository.ProdutoRepository;
 import com.mercado.placido.produto.service.TicketService;
+
+import reactor.core.publisher.Mono;
 
 @RestController
 public class ProdutoController {
@@ -24,13 +27,15 @@ public class ProdutoController {
 	}
 
 	@GetMapping(value = "/produto/{produtoId}")
-	public Produto findByAccountId(@PathVariable Integer produtoId) {
+	public Mono<Produto> findByAccountId(@PathVariable Integer produtoId) {
 
 		Produto produto = produtoRepository.findByProdutoId(produtoId);
 
-		produto.setTicket(ticketService.findByProdutoId(produtoId));
-
-		return produto;
+		return ticketService.findByProdutoId(produtoId)
+	            .map(ticket -> {
+	                produto.setTicket(ticket);
+	                return produto;
+	            });
 	}
 
 }
