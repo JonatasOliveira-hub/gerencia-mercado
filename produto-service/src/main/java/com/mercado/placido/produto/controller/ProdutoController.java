@@ -19,7 +19,7 @@ public class ProdutoController {
 
 	@Autowired
 	TicketService ticketService;
-	
+
 	@GetMapping(value = "/produto")
 	public Iterable<Produto> all() {
 		return produtoRepository.findAll();
@@ -30,9 +30,9 @@ public class ProdutoController {
 		Produto produto = produtoRepository.findByProdutoId(produtoId);
 
 		return ticketService.findByProdutoId(produtoId)
-	            .map(ticket -> {
-	                produto.setTicket(ticket);
-	                return produto;
-	            });
+		.map(ticket -> {
+			produto.setTicket(ticket);
+			return produto;
+		});
 	}
 }
